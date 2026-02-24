@@ -49,6 +49,8 @@ public class IDAMappingConfig implements MappingConfig {
 	/** The email id. */
 	private List<String> emailId;
 
+	private List<String> whatsappNumber;
+
 	/** The address line 1. */
 	private List<String> addressLine1;
 

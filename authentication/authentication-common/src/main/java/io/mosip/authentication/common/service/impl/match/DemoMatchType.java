@@ -79,6 +79,8 @@ public enum DemoMatchType implements MatchType {
 	/** E-mail Match Type. */
 	EMAIL(IdaIdMapping.EMAIL, setOf(EmailMatchingStrategy.EXACT),
 			identityDTO -> getIdInfoList(identityDTO.getEmailId()), false),
+	WHATSAPPNUMBER(IdaIdMapping.WHATSAPPNUMBER,setOf(whatsappNumberMatchingStrategy.EXACT),
+			identityDTO->getIdInfoList(identityDTO.getWhatsappNumber()),false),
 
 	/** The addr line1. */
 	ADDR_LINE1(IdaIdMapping.ADDRESSLINE1, setOf(AddressMatchingStrategy.EXACT), IdentityDTO::getAddressLine1),

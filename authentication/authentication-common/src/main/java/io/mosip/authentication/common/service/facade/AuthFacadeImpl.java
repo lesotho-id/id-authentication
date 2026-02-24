@@ -175,6 +175,8 @@ public class AuthFacadeImpl implements AuthFacade {
 				filterAttributes.add(IdaIdMapping.PASSWORD.getIdname());
 			}
 		}
+		filterAttributes.add(IdaIdMapping.WHATSAPPNUMBER.getIdname());
+		System.out.println("all filter attributes:"+filterAttributes);
 		
 		Map<String, Object> idResDTO = idService.processIdType(idvIdType, idvid, idInfoHelper.isBiometricDataNeeded(authRequestDTO),
 				markVidConsumed, filterAttributes);

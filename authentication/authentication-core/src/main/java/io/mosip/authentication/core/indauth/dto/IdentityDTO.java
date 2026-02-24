@@ -41,6 +41,8 @@ public class IdentityDTO implements ObjectWithMetadata{
 	/**  List of identity info to hold emailId. */
 	String emailId;
 
+	String whatsappNumber;
+
 	/**  List of identity info to hold addressLine1. */
 	List<IdentityInfoDTO> addressLine1;
 

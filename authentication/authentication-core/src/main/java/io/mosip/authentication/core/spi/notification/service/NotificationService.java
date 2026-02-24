@@ -25,7 +25,7 @@ public interface NotificationService {
 			List<String> templateLanguages, String otp, String notificationProperty, LocalDateTime otpGenerationTime)
 					throws IdAuthenticationBusinessException;
 	
-	public void sendNotification(Map<String, Object> values, String emailId, String phoneNumber, SenderType sender,
+	public void sendNotification(Map<String, Object> values, String emailId, String phoneNumber, String whatsappNumber,SenderType sender,
 			String notificationProperty, List<String> templateLanguages) throws IdAuthenticationBusinessException;
 
 }
