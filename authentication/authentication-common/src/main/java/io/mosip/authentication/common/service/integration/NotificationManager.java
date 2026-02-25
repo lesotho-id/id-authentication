@@ -89,4 +89,19 @@ public class NotificationManager {
 			throw new IdAuthenticationBusinessException(IdAuthenticationErrorConstants.DATA_VALIDATION_FAILED, e);
 		}
 	}
+	public void sendWhatappNotification(String notificationMobileNo, String message) throws IdAuthenticationBusinessException{
+		try {
+			MultiValueMap<String, String> whatsappRequest = new LinkedMultiValueMap<>();
+			whatsappRequest.add("recipient", notificationMobileNo);
+			whatsappRequest.add("message", message);
+
+			RestRequestDTO restRequestDTO = null;
+			restRequestDTO = restRequestFactory.buildRequest(RestServicesConstants.WHATSAPP_NOTIFICATION_SERVICE,
+					whatsappRequest, String.class);
+			restHelper.requestAsync(restRequestDTO);
+		} catch (IDDataValidationException e) {
+			logger.error(IdAuthCommonConstants.SESSION_ID, "Inside WHATSAPP Notification >>>>>", e.getErrorCode(), e.getErrorText());
+			throw new IdAuthenticationBusinessException(IdAuthenticationErrorConstants.DATA_VALIDATION_FAILED, e);
+		}
+	}
 }
