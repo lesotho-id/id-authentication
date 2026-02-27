@@ -15,6 +15,7 @@ public enum NotificationType {
 	 * Enum for Email
 	 */
 	EMAIL("email", "EMAIL"),
+	WHATSAPP("whatsapp","WHATSAPP","WHATSAPP"),
 
 	/**
 	 * Enum for SMS

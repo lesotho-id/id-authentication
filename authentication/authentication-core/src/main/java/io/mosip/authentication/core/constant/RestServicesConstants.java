@@ -20,6 +20,7 @@ public enum RestServicesConstants {
 
 	/** Mail notification service. */
 	MAIL_NOTIFICATION_SERVICE("mail-notification"),
+	WHATSAPP_NOTIFICATION_SERVICE("whatsapp-notification"),
 
 	/** SMS notification service. */
 	SMS_NOTIFICATION_SERVICE("sms-notification"),

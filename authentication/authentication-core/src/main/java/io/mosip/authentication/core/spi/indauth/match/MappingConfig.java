@@ -59,6 +59,7 @@ public interface MappingConfig {
 	 * @return the email id
 	 */
 	public List<String> getEmailId();
+	public List<String> getWhatsappNumber();
 
 	/**
 	 * List of value to hold Address Line 1.

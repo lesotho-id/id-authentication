@@ -51,7 +51,9 @@ public enum IdaIdMapping implements IdMapping {
 	
 	/** The email. */
 	EMAIL("emailId", MappingConfig::getEmailId),
-	
+
+	WHATSAPPNUMBER("whatsappNumber",MappingConfig::getWhatsappNumber),
+
 	/** The addressline1. */
 	ADDRESSLINE1("addressLine1", MappingConfig::getAddressLine1),
 	

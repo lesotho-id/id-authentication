@@ -122,8 +122,11 @@ public class NotificationServiceImpl implements NotificationService {
 
 		String phoneNumber = null;
 		String email = null;
+		String whatsappNumber=null;
 		phoneNumber = infoHelper.getEntityInfoAsString(DemoMatchType.PHONE, idInfo);
 		email = infoHelper.getEntityInfoAsString(DemoMatchType.EMAIL, idInfo);
+		whatsappNumber=infoHelper.getEntityInfoAsString(DemoMatchType.WHATSAPPNUMBER,idInfo);
+		System.out.println("new whatsapp number: " + whatsappNumber);
 		String notificationType = null;
 		if (isAuth) {
 			notificationType = EnvUtil.getNotificationType();
@@ -132,7 +135,7 @@ public class NotificationServiceImpl implements NotificationService {
 			notificationType = NotificationType.NONE.getName();
 		}
 
-		sendNotification(values, email, phoneNumber, SenderType.AUTH, notificationType, templateLanguages);
+		sendNotification(values, email, phoneNumber,whatsappNumber, SenderType.AUTH, notificationType, templateLanguages);
 	}
 
 	public void sendOTPNotification(String idvid, String idvidType, Map<String, String> valueMap,
@@ -141,7 +144,7 @@ public class NotificationServiceImpl implements NotificationService {
 		Map<String, Object> otpTemplateValues = getOtpTemplateValues(idvid, idvidType, valueMap, otpGenerationTime);
 		otpTemplateValues.put("otp", otp);
 		this.sendNotification(otpTemplateValues, valueMap.get(IdAuthCommonConstants.EMAIL),
-				valueMap.get(IdAuthCommonConstants.PHONE_NUMBER), SenderType.OTP, notificationProperty,
+				valueMap.get(IdAuthCommonConstants.PHONE_NUMBER),null, SenderType.OTP, notificationProperty,
 				templateLanguages);
 	}
 
@@ -205,7 +208,7 @@ public class NotificationServiceImpl implements NotificationService {
 	 * @throws IdAuthenticationBusinessException
 	 */
 
-	public void sendNotification(Map<String, Object> values, String emailId, String phoneNumber, SenderType sender,
+	public void sendNotification(Map<String, Object> values, String emailId, String phoneNumber,String whatsappNumber,  SenderType sender,
 			String notificationProperty, List<String> templateLanguages) throws IdAuthenticationBusinessException {
 		String notificationtypeconfig = notificationProperty;
 		String notificationMobileNo = phoneNumber;
@@ -218,10 +221,10 @@ public class NotificationServiceImpl implements NotificationService {
 				for (int i = 0; i < 2; i++) {
 					String nvalue = "";
 					nvalue = value[i];
-					processNotification(emailId, notificationMobileNo, notificationtype, nvalue);
+					processNotification(emailId, notificationMobileNo, whatsappNumber,notificationtype, nvalue);
 				}
 			} else {
-				processNotification(emailId, notificationMobileNo, notificationtype, notificationtypeconfig);
+				processNotification(emailId, notificationMobileNo, whatsappNumber,notificationtype, notificationtypeconfig);
 			}
 
 		}
@@ -233,6 +236,9 @@ public class NotificationServiceImpl implements NotificationService {
 		if (notificationtype.contains(NotificationType.EMAIL)) {
 			invokeEmailNotification(values, emailId, sender, templateLanguages);
 
+		}
+		if (notificationtype.contains(NotificationType.WHATSAPP)) {
+			invokeWhatsappNotification(values, sender, whatsappNumber, templateLanguages);
 		}
 
 	}
@@ -246,7 +252,7 @@ public class NotificationServiceImpl implements NotificationService {
 	 * @param notificationtypeconfig - Notification type from the configuration
 	 */
 
-	private void processNotification(String emailId, String phoneNumber, Set<NotificationType> notificationtype,
+	private void processNotification(String emailId, String phoneNumber, String whatsappNumber,Set<NotificationType> notificationtype,
 			String notificationtypeconfig) {
 		String type = notificationtypeconfig;
 		if (type.equalsIgnoreCase(NotificationType.SMS.getName())) {
@@ -265,6 +271,15 @@ public class NotificationServiceImpl implements NotificationService {
 			} else {
 				if (isNotNullorEmpty(phoneNumber)) {
 					notificationtype.add(NotificationType.SMS);
+				}
+			}
+		}
+		if (type.equalsIgnoreCase(NotificationType.WHATSAPP.getName())) {
+			if (isNotNullorEmpty(whatsappNumber)) {
+				notificationtype.add(NotificationType.WHATSAPP);
+			} else {
+				if (isNotNullorEmpty(emailId)) {
+					notificationtype.add(NotificationType.EMAIL);
 				}
 			}
 		}
@@ -350,7 +365,18 @@ public class NotificationServiceImpl implements NotificationService {
 		String mailContent = applyTemplate(values, contentTemplate, templateLanguages);
 		notificationManager.sendEmailNotification(emailId, mailSubject, mailContent);
 	}
-	
+	private void invokeWhatsappNotification(Map<String, Object> values, SenderType sender, String notificationMobileNo, List<String> templateLanguages) throws IdAuthenticationBusinessException{
+		String authSmsTemplate = EnvUtil.getAuthSmsTemplate();
+		String otpSmsTemplate = EnvUtil.getOtpSmsTemplate();
+		String contentTemplate = "";
+		if (sender == SenderType.AUTH && authSmsTemplate != null) {
+			contentTemplate = authSmsTemplate;
+		} else if (sender == SenderType.OTP && otpSmsTemplate != null) {
+			contentTemplate = otpSmsTemplate;
+		}
+		String smsTemplate = applyTemplate(values, contentTemplate, templateLanguages);
+		notificationManager.sendWhatappNotification(notificationMobileNo, smsTemplate);
+	}
 	/**
 	 * This method gets the template languages in following order.
 	 * 1. Gets user preferred languages if not
